@@ -1,0 +1,78 @@
+@import "breakpoint";
+@import "config";
+
+$gutter: 1em !default;
+$dev: false !default;
+$medium: 480px !default;
+$large: 720px !default;
+$num-columns: 6 !default;
+$max-width: 1024px !default;
+$color-border: #00BCD4 !default;
+
+// column mixin
+@mixin columns($num) {
+	@for $i from 1 through $num {
+		.col-#{$i} { width: 100% * ($i/$num); }
+	}
+}
+
+@mixin columns-medium($num) {
+	@for $i from 1 through $num {
+		.med-#{$i} { width: 100% * ($i/$num); }
+	}
+}
+
+@mixin columns-large($num) {
+	@for $i from 1 through $num {
+		.lrg-#{$i} { width: 100% * ($i/$num); }
+	}
+}
+
+
+[class*='grid-container'] {
+	width: 100%;
+	max-width: $max-width;
+
+	@if $dev {
+		border: 1px solid $color-border;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	[class*='row'] {
+		&:before, &:after {
+			content:"";
+			display: table ;
+			clear:both;
+		}//clearfix
+
+		[class*='col-'] {
+			float: left;
+			min-height: 1px;
+			padding: $gutter;
+
+			@if $dev {
+				border: 1px solid $color-border;
+			}
+		}//all columns
+	}//all rows
+
+	.row {
+		// mobile columns
+		@include columns($num-columns);
+
+		// medium columns
+		@include breakpoint($medium) {
+			@include columns-medium($num-columns);
+		}
+
+		// large columns
+		@include breakpoint($large) {
+			@include columns-large($num-columns);
+		}
+	}//.row
+
+}//.grid-container
+
